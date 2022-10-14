@@ -1,13 +1,23 @@
 class SightingsController < ApplicationController
+    # def index
+    #     sightings = Sighting.all
+    #     render json: sightings
+    # end
+
     def index
-        sightings = Sighting.all
+        sightings = Sighting.where(date: params[:start_date]..params[:end_date])
         render json: sightings
     end
 
+    # def show
+    #     sighting = Sighting.find(params[:id])
+    #     render json: sighting
+    # end
+
     def show
-        sighting = Sighting.find(params[:id])
-        render json: sighting
-    end
+        sighting = Sighting.find_by(id: params[:id])
+        render json: sighting, include: [:animal]
+      end
 
     def create
         sighting = Sighting.create(sighting_params)
@@ -39,6 +49,6 @@ class SightingsController < ApplicationController
      
     private
     def sighting_params
-      params.require(:sighting).permit(:animal_id, :latitude, :longitude, :date, :string)
+      params.require(:sighting).permit(:animal_id, :latitude, :longitude, :date, :start_date, :end_date, :string)
     end
 end
